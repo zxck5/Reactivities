@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline. middleware
 if (app.Environment.IsDevelopment())
@@ -19,7 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 // using cors at middleware
-app.UseCors("CorsPolicy");
+
+
 
 // app.UseHttpsRedirection();
 
@@ -46,7 +48,7 @@ try
 catch (Exception ex)
 {
     var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex,"An error occured during migration");
+    logger.LogError(ex, "An error occured during migration");
 }
 
 app.Run();

@@ -3,7 +3,7 @@ import { Activity } from '../models/activity';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
-        setTimeout(resolve,delay);
+        setTimeout(resolve, delay);
     })
 }
 
@@ -28,17 +28,17 @@ axios.interceptors.response.use(async response => {
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const requests = {
-    get : <T> (url: string) => axios.get<T>(url).then((response: AxiosResponse) => response.data),
-    post : async <T>(url: string, body: object) => await axios.post<T>(url,body),
-    put : async <T>(url: string, body: object) => await axios.put<T>(url,body),
-    del : <T>(url: string) => axios.delete<T>(url).then(responseBody)
+    get: <T>(url: string) => axios.get<T>(url).then((response: AxiosResponse) => response.data),
+    post: <T>(url: string, body: object) => axios.post<T>(url, body).then(responseBody),
+    put: <T>(url: string, body: object) => axios.put<T>(url, body).then(responseBody),
+    del: <T>(url: string) => axios.delete<T>(url).then(responseBody)
 }
 
 const Activities = {
-    list : () => requests.get<Activity[]>('/activities'),
+    list: () => requests.get<Activity[]>('/activities'),
     details: (id: string) => requests.get<Activity>(`/activities/${id}`),
-    create: async (activity: Activity) => await requests.post<void>(`/activities`, activity),
-    update: async (activity: Activity) => await requests.put<void>(`/activities/${activity.id}`, activity),
+    create: (activity: Activity) => requests.post<void>(`/activities`, activity),
+    update: (activity: Activity) => requests.put<Activity>(`/activities/${activity.id}`, activity),
     delete: (id: string) => requests.del<void>(`/activities/${id}`)
 }
 

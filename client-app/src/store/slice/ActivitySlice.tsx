@@ -4,12 +4,16 @@ import { createActivity, fetchActivities, deleteActivity, updateActivity } from 
 
 interface ActivityState {
     data: Activity[],
-    loading: boolean
+    loading: boolean,
+    groupedData: Array<[string, Activity[]]>,
+    selectedActivity: Activity | undefined
 }
 
 const initialState: ActivityState = {
     data: [],
-    loading: false
+    loading: false,
+    groupedData: [],
+    selectedActivity: undefined
 };
 
 // Sorting function type (payload of the action)
@@ -25,12 +29,29 @@ const ActivitySlice = createSlice({
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
+        },
+        setGroupedActivities: (state) => {
+            state.groupedData = Object.entries(
+                state.data.reduce((activities, activity) => {
+                    const date = activity.date;
+                    activities[date] = activities[date]
+                        ? [...activities[date], activity]
+                        : [activity];
+                    return activities;
+                }, {} as { [key: string]: Activity[] })
+            )
+        },
+        setSelectedActivity: (state, action) => {
+            state.selectedActivity = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchActivities.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.data = action.payload.map((activity: Activity) => ({
+                    ...activity,
+                    date: activity.date.split('T')[0]
+                }));
             })
             .addCase(createActivity.fulfilled, (state, action) => {
                 // console.log('New Activity:', action.payload);
@@ -50,5 +71,5 @@ const ActivitySlice = createSlice({
     }
 });
 
-export const { sortActivitiesBy, setLoading } = ActivitySlice.actions;
+export const { sortActivitiesBy, setLoading, setGroupedActivities, setSelectedActivity } = ActivitySlice.actions;
 export const activityReducer = ActivitySlice.reducer;

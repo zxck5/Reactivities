@@ -1,4 +1,4 @@
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Card, Form, Segment } from 'semantic-ui-react';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Activity } from '../../../app/models/activity';
 import { v4 as uuid } from 'uuid';
@@ -43,17 +43,21 @@ export default function ActivityAddForm() {
 
 
     return (
-        <Segment clearing>
-            <Form onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
-                <Form.Input placeholder='Title' name='title' value={activityForm.title} onChange={handleInputChange} />
-                <Form.TextArea placeholder='Description' name='description' value={activityForm.description} onChange={handleInputChange} />
-                <Form.Input placeholder='Category' name='category' value={activityForm.category} onChange={handleInputChange} />
-                <Form.Input placeholder='Date' type='date' name='date' value={activityForm.date} onChange={handleInputChange} />
-                <Form.Input placeholder='City' name='city' value={activityForm.city} onChange={handleInputChange} />
-                <Form.Input placeholder='Venue' name='venue' value={activityForm.venue} onChange={handleInputChange} />
-                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
-                <Button floated='right' type='button' content='Cancel' />
-            </Form>
-        </Segment>
+        <Card fluid>
+            <Segment fluid clearing>
+                <Form onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
+                    <Form.Input placeholder='Title' name='title' value={activityForm.title} onChange={handleInputChange} />
+                    <Form.TextArea placeholder='Description' name='description' value={activityForm.description} onChange={handleInputChange} />
+                    <Form.Input placeholder='Category' name='category' value={activityForm.category} onChange={handleInputChange} />
+                    <Form.Input placeholder='Date' type='date' name='date' value={activityForm.date} onChange={handleInputChange} />
+                    <Form.Input placeholder='City' name='city' value={activityForm.city} onChange={handleInputChange} />
+                    <Form.Input placeholder='Venue' name='venue' value={activityForm.venue} onChange={handleInputChange} />
+                    <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
+                    <Button floated='right' type='button' content='Cancel' />
+                </Form>
+            </Segment>
+
+        </Card>
+
     )
 }

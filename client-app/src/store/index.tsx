@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { fetchActivities, createActivity, deleteActivity, updateActivity } from './slice/Api/ActivitySliceAsyncThunk';
-import { activityReducer, setLoading, sortActivitiesBy } from './slice/ActivitySlice';
+import { activityReducer, setGroupedActivities, setLoading, setSelectedActivity, sortActivitiesBy } from './slice/ActivitySlice';
 
 
 const store = configureStore({
@@ -32,5 +32,7 @@ export {
     deleteActivity,
     updateActivity,
     setLoading,
-    sortActivitiesBy
+    sortActivitiesBy,
+    setGroupedActivities,
+    setSelectedActivity
 }

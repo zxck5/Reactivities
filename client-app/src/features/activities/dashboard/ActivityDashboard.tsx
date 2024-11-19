@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Container, Grid } from 'semantic-ui-react';
 import LoadingComponent from '../../../app/layout/LoadingComponents';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchActivities, AppDispatch, AppState, setLoading } from '../../../store';
 import { Outlet } from 'react-router-dom';
+import NavBar from '../../../app/layout/Navbar';
 
 
 export default function ActivityDashboard() {
@@ -33,12 +34,12 @@ export default function ActivityDashboard() {
 
 
     return (
-        <Grid>
-            <Grid.Column width='10'>
+        <>
+            <NavBar />
+            <Container style={{ marginTop: '7em' }}>
                 <Outlet />
-            </Grid.Column>
-            <Grid.Column width='6'>
-            </Grid.Column>
-        </Grid>
-    )
+            </Container>
+        </>
+
+    );
 }

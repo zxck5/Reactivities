@@ -13,14 +13,15 @@ export const routes: RouteObject[] = [
         element: <App />,
         children: [
             { index: true, element: <HomePage /> },
+
             {
                 path: 'activities',
                 element: <ActivityDashboard />,
                 children: [
                     { index: true, element: <ActivityList /> },
-                    { path: 'create', element: <ActivityAddForm /> },
                     { path: ':id', element: <ActivityDetails /> },
-                    { path: 'manage/:id', element: <ActivityEditForm /> }
+                    { path: 'manage/:id', element: <ActivityEditForm /> },
+                    { path: 'create', element: <ActivityAddForm /> }
 
                 ]
 

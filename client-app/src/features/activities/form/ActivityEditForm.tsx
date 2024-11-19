@@ -1,4 +1,4 @@
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Card, Form, Segment } from 'semantic-ui-react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Activity } from '../../../app/models/activity';
@@ -30,7 +30,7 @@ export default function ActivityForm() {
     useEffect(() => {
         if (!selectedActivity) {
             // Redirect to another route if selectedActivity is null
-            navigate("/activities/create");
+            navigate("/activity/create");
         }
     }, [selectedActivity, navigate]);
 
@@ -62,17 +62,19 @@ export default function ActivityForm() {
     }
 
     return (
-        <Segment clearing>
-            <Form onSubmit={handleSubmit} autoComplete='off'>
-                <Form.Input placeholder='Title' name='title' value={activityForm.title} onChange={handleInputChange} />
-                <Form.TextArea placeholder='Description' name='description' value={activityForm.description} onChange={handleInputChange} />
-                <Form.Input placeholder='Category' name='category' value={activityForm.category} onChange={handleInputChange} />
-                <Form.Input placeholder='Date' type='date' name='date' value={activityForm.date} onChange={handleInputChange} />
-                <Form.Input placeholder='City' name='city' value={activityForm.city} onChange={handleInputChange} />
-                <Form.Input placeholder='Venue' name='venue' value={activityForm.venue} onChange={handleInputChange} />
-                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
-                <Button onClick={handleFormClose} floated='right' type='button' content='Cancel' />
-            </Form>
-        </Segment>
+        <Card fluid>
+            <Segment clearing>
+                <Form onSubmit={handleSubmit} autoComplete='off'>
+                    <Form.Input placeholder='Title' name='title' value={activityForm.title} onChange={handleInputChange} />
+                    <Form.TextArea placeholder='Description' name='description' value={activityForm.description} onChange={handleInputChange} />
+                    <Form.Input placeholder='Category' name='category' value={activityForm.category} onChange={handleInputChange} />
+                    <Form.Input placeholder='Date' type='date' name='date' value={activityForm.date} onChange={handleInputChange} />
+                    <Form.Input placeholder='City' name='city' value={activityForm.city} onChange={handleInputChange} />
+                    <Form.Input placeholder='Venue' name='venue' value={activityForm.venue} onChange={handleInputChange} />
+                    <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
+                    <Button onClick={handleFormClose} floated='right' type='button' content='Cancel' />
+                </Form>
+            </Segment>
+        </Card>
     )
 }

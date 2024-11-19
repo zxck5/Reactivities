@@ -4,12 +4,8 @@ import agent from "../../../app/api/agent";
 
 const fetchActivities = createAsyncThunk<Activity[]>('activity/fetchActivities',
     async () => {
-        const response = await agent.Activities.list();
-        console.log("FETCH ACTIVITIES ASYNC THUNK")
-        return response.map((activity: Activity) => ({
-            ...activity,
-            date: activity.date.split('T')[0]
-        }));
+        console.log("FETCH ACTIVITIES ASYNC THUNK");
+        return await agent.Activities.list();
     }
 );
 

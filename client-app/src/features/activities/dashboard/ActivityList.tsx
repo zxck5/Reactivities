@@ -1,6 +1,6 @@
-import { Container, Grid, Header } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, AppState, setGroupedActivities } from '../../../store';
+import { AppDispatch, AppState, setGroupedActivities, sortActivitiesBy } from '../../../store';
 import ActivityListItem from './ActivityListItem';
 import { Fragment, useEffect } from 'react';
 import { Activity } from '../../../app/models/activity';
@@ -9,18 +9,17 @@ import ActivityFilters from './ActivityFilters';
 
 export default function ActivityList() {
     const dispatch = useDispatch<AppDispatch>()
-    const activities = useSelector((state: AppState) => state.activity.data);
     const groupedActivities = useSelector((state: AppState) => state.activity.groupedData);
-    // console.log('Is response frozen?', Object.isFrozen(activities));
-    const sortedActivities = [...activities].sort((a, b) =>
-        new Date(a.date).getTime() - new Date(b.date).getTime())
+    // console.log('Is response frozen?', Object.isFrozen(activities));sssss
+    // const sortedActivities = [...activities].sort((a, b) =>
+    //     new Date(a.date).getTime() - new Date(b.date).getTime())
 
     useEffect(() => {
-        // dispatch(sortActivitiesBy((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
-        if (sortedActivities.length > 0) {
-            dispatch(setGroupedActivities())
-        }
-    }, [dispatch, sortedActivities.length]);
+        dispatch(sortActivitiesBy((a, b) => a.date! - b.date!));
+        // if (sortedActivities.length > 0) {
+        dispatch(setGroupedActivities());
+        // }
+    }, [dispatch]);
 
     return (
 

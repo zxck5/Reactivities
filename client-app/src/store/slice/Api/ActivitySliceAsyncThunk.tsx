@@ -9,9 +9,15 @@ const fetchActivities = createAsyncThunk<Activity[]>('activity/fetchActivities',
     }
 );
 
+const getActivity = createAsyncThunk<Activity, string>('activity/fetchActivity',
+    async (id) => {
+        return await agent.Activities.details(id);
+    }
+)
+
 const createActivity = createAsyncThunk<Activity, Activity>('activity/createActivity',
     async (activity) => {
-        await agent.Activities.create(activity);
+        await agent.Activities.create({ ...activity, date: new Date(activity.date) });
         return activity;
     }
 );
@@ -25,7 +31,7 @@ const deleteActivity = createAsyncThunk<string, string>('activity/deleteActivity
 
 const updateActivity = createAsyncThunk<Activity, Activity>('activity/updateActivity',
     async (activity) => {
-        await agent.Activities.update(activity);
+        await agent.Activities.update({ ...activity, date: new Date(activity.date) });
         return activity;
     }
 )
@@ -33,5 +39,5 @@ const updateActivity = createAsyncThunk<Activity, Activity>('activity/updateActi
 
 
 
-export { fetchActivities, createActivity, deleteActivity, updateActivity };
+export { fetchActivities, getActivity, createActivity, deleteActivity, updateActivity };
 

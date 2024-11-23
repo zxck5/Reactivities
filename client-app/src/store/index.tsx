@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { fetchActivities, createActivity, deleteActivity, updateActivity } from './slice/Api/ActivitySliceAsyncThunk';
+import { fetchActivities, createActivity, deleteActivity, updateActivity, getActivity } from './slice/Api/ActivitySliceAsyncThunk';
 import { activityReducer, setGroupedActivities, setLoading, setSelectedActivity, sortActivitiesBy } from './slice/ActivitySlice';
+import { ActivityErrorReducer, setError } from "./slice/ActivityErrorSlice";
 
 
 const store = configureStore({
     reducer: {
-        activity: activityReducer
+        activity: activityReducer,
+        error: ActivityErrorReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -22,6 +24,8 @@ const store = configureStore({
 
 });
 
+
+
 export type AppDispatch = typeof store.dispatch;
 export type AppState = ReturnType<typeof store.getState>;
 
@@ -31,8 +35,10 @@ export {
     createActivity,
     deleteActivity,
     updateActivity,
+    getActivity,
     setLoading,
     sortActivitiesBy,
     setGroupedActivities,
-    setSelectedActivity
+    setSelectedActivity,
+    setError
 }

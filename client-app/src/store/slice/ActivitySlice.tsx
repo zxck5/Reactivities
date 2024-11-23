@@ -1,12 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Activity } from '../../app/models/activity';
-import { createActivity, fetchActivities, deleteActivity, updateActivity } from './Api/ActivitySliceAsyncThunk';
+import { createActivity, fetchActivities, deleteActivity, updateActivity, getActivity } from './Api/ActivitySliceAsyncThunk';
+import { format } from 'date-fns';
 
-interface ActivityState {
+
+export interface ActivityState {
     data: Activity[],
     loading: boolean,
     groupedData: Array<[string, Activity[]]>,
-    selectedActivity: Activity | undefined
+    selectedActivity: Activity | undefined,
+
 }
 
 const initialState: ActivityState = {
@@ -33,7 +36,8 @@ const ActivitySlice = createSlice({
         setGroupedActivities: (state) => {
             state.groupedData = Object.entries(
                 state.data.reduce((activities, activity) => {
-                    const date = activity.date;
+                    // const date = activity.date!.toISOString().split('T')[0];
+                    const date = format(activity.date!, 'dd MMM yyyy')
                     activities[date] = activities[date]
                         ? [...activities[date], activity]
                         : [activity];
@@ -42,6 +46,7 @@ const ActivitySlice = createSlice({
             )
         },
         setSelectedActivity: (state, action) => {
+            console.log(action.payload)
             state.selectedActivity = action.payload;
         }
     },
@@ -50,8 +55,11 @@ const ActivitySlice = createSlice({
             .addCase(fetchActivities.fulfilled, (state, action) => {
                 state.data = action.payload.map((activity: Activity) => ({
                     ...activity,
-                    date: activity.date.split('T')[0]
+                    date: new Date(activity.date!).getTime()
                 }));
+            })
+            .addCase(getActivity.fulfilled, (state, action) => {
+                state.selectedActivity = action.payload;
             })
             .addCase(createActivity.fulfilled, (state, action) => {
                 // console.log('New Activity:', action.payload);
@@ -62,6 +70,7 @@ const ActivitySlice = createSlice({
             })
             .addCase(updateActivity.fulfilled, (state, action) => {
                 state.data = state.data.map(activity => {
+                    console.log("UPDATE")
                     if (action.payload.id === activity.id) {
                         return action.payload;
                     }

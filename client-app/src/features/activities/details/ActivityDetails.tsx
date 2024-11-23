@@ -1,24 +1,37 @@
-import { Card, Image, CardMeta, CardContent, CardHeader, CardDescription, Button, Grid } from "semantic-ui-react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { AppState } from "../../../store";
+import { Card, Grid } from "semantic-ui-react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, AppState, getActivity } from "../../../store";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
 import ActivityDetailedChat from "./ActivityDetailedChat";
 import ActivityDetailedSidebar from "./ActivityDetailedSideBar";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Activity } from "../../../app/models/activity";
+
 
 
 export default function ActivityDetails() {
 
-    const selectedActivity = useSelector((state: AppState) => state.activity.selectedActivity);
+    const { id } = useParams<string>();
+    const dispatch = useDispatch<AppDispatch>();
+    const activity = useSelector<AppState, Activity | undefined>(state => state.activity.selectedActivity);
+
+    useEffect(() => {
+        if (id && !activity) {
+            dispatch(getActivity(id))
+        }
 
 
+    }, [id, dispatch, activity])
+
+    // if (!selectedActivity) return <Navigate to={'/not-found'} />
     return (
         <Card fluid>
             <Grid>
                 <Grid.Column width={10}>
-                    <ActivityDetailedHeader activity={selectedActivity} />
-                    <ActivityDetailedInfo activity={selectedActivity} />
+                    {activity && <ActivityDetailedHeader activity={activity} />}
+                    {activity && <ActivityDetailedInfo activity={activity} />}
                     <ActivityDetailedChat />
                 </Grid.Column>
                 <Grid.Column width={6}>

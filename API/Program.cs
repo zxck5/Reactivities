@@ -1,29 +1,39 @@
 using API.Extensions;
-using Application.Activities;
-using Application.Core;
+using API.Middleware;
+using Domain;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers(opt =>
+{
+    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+    opt.Filters.Add(new AuthorizeFilter(policy));
+});
 
 builder.Services.AddApplicationServices(builder.Configuration);
-
+builder.Services.AddIdentityService(builder.Configuration);
 var app = builder.Build();
 app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline. middleware
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseMiddleware<ExceptionMiddleWare>();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
 }
 // using cors at middleware
 
 
 
 // app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
@@ -42,8 +52,9 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedData(context);
+    await Seed.SeedData(context, userManager);
 }
 catch (Exception ex)
 {

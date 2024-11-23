@@ -1,27 +1,27 @@
 import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+// import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch, deleteActivity, setSelectedActivity } from "../../../store";
-
+import { AppDispatch, setSelectedActivity } from "../../../store";
+import { format } from 'date-fns';
 
 interface Props {
     activity: Activity
 }
 
 export default function ActivityListItem({ activity }: Props) {
-    const [target, setTarget] = useState('');
-    const [submitting, setSubmitting] = useState(false);
+    // const [target, setTarget] = useState('');
+    // const [submitting, setSubmitting] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
 
-    const handleActivityDelete = async (id: string) => {
-        setTarget(id);
-        setSubmitting(true);
-        await dispatch(deleteActivity(id));
-        setSubmitting(false);
+    // const handleActivityDelete = async (id: string) => {
+    //     setTarget(id);
+    //     setSubmitting(true);
+    //     await dispatch(deleteActivity(id));
+    //     setSubmitting(false);
 
-    }
+    // }
     const handleActivityDetail = (activity: Activity) => {
         dispatch(setSelectedActivity(activity));
     }
@@ -42,7 +42,7 @@ export default function ActivityListItem({ activity }: Props) {
             </Segment>
             <Segment>
                 <span>
-                    <Icon name='clock' /> {activity.date}
+                    <Icon name='clock' /> {format(activity.date!, 'dd MMM yyyy h:mm aa')}
                     <Icon name="marker" /> {activity.venue}
                 </span>
             </Segment>

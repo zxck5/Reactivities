@@ -1,10 +1,14 @@
-import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { Container, Header, Segment } from "semantic-ui-react";
-import { AppState } from "../../store";
+
+
+
 
 export default function ServerError() {
-    const message = useSelector<AppState>(state => state.error.message);
-    const details = useSelector<AppState>(state => state.error.details);
+    const location = useLocation();
+    const message = location.state?.message; // Access the state
+    const details = location.state?.details;
+
     return (
         <Container>
             <Header as={'h1'} content='Server Error' />

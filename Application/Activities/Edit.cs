@@ -34,7 +34,8 @@ namespace Application.Activities
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
                 // activity.Title = request.Acitivity.Title ?? activity.Title;
                 if (activity == null) return null;
-                _mapper.Map(request.Activity, activity);
+                // _mapper.Map(request.Activity, activity);
+                activity.EditActivity(request.Activity);
                 var result = await _context.SaveChangesAsync() > 0;
                 _logger.LogInformation("Check result {0}", result);
                 if (!result) return Result<Unit>.Failure("Failed to edit Activity");

@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+
     public class ActivitiesController(ILogger<ActivitiesController> logger) : BaseApiController
     {
         // private readonly IMediator _mediator = mediator;
         private readonly ILogger<ActivitiesController> _logger = logger;
 
+        [Authorize]
         [HttpGet] //api/activities
         public async Task<ActionResult<List<Activity>>> GetActivities()
         {
@@ -35,6 +37,7 @@ namespace API.Controllers
 
         }
 
+        [Authorize(Policy = "IsActivityHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
@@ -42,11 +45,22 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
 
         }
+
+        [Authorize(Policy = "IsActivityHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
             // _logger.LogInformation("HELLO, ID : {0}", id);
             return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+
+        // FIX 
+        // Divide by cancel or add attendance to certain activity
+
+        [HttpPost("{id}/attend")]
+        public async Task<IActionResult> Attend(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
         }
     }
 }

@@ -6,9 +6,14 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/router/Routes.tsx';
 import './app/layout/styles.css';
+import { Provider } from 'react-redux';
+import { store } from './store/index.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
-  <RouterProvider
-    router={router} />
+  <Provider store={store}>
+    <RouterProvider
+      router={router} />
+  </Provider>
+
 )

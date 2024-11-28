@@ -58,11 +58,15 @@ const ActivitySlice = createSlice({
                     date: new Date(activity.date!).getTime()
                 }));
             })
+            .addCase(fetchActivities.rejected, (state, action) => {
+
+            })
             .addCase(getActivity.fulfilled, (state, action) => {
                 state.selectedActivity = action.payload;
             })
             .addCase(createActivity.fulfilled, (state, action) => {
                 // console.log('New Activity:', action.payload);
+                console.log("It is fullfilled");
                 state.data.push(action.payload);
             })
             .addCase(deleteActivity.fulfilled, (state, action) => {

@@ -1,8 +1,8 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Activity } from '../models/activity';
 import { toast } from 'react-toastify';
 import { router } from '../router/Routes';
-import { store, setError } from '../../store/index';
+import { User, UserFormValues } from '../models/user';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -91,6 +91,7 @@ export const axiosInstance = axios.create({
 
 
 
+
 axiosInstance.interceptors.response.use(async response => {
     await sleep(1000);
     return response;
@@ -127,8 +128,14 @@ axiosInstance.interceptors.response.use(async response => {
             break;
         case 500:
             toast.error('server error');
-            store.dispatch(setError(data));
-            router.navigate('/server-error');
+            // store.dispatch(setError(data));
+            console.log(data)
+            router.navigate('/server-error', {
+                state: {
+                    message: data.message,
+                    details: data.details
+                }
+            });
             break;
         default:
             break;
@@ -140,21 +147,28 @@ axiosInstance.interceptors.response.use(async response => {
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const requests = {
-    get: <T>(url: string) => axiosInstance.get<T>(url).then((response: AxiosResponse) => response.data),
+    get: <T>(url: string, config?: AxiosRequestConfig) => axiosInstance.get<T>(url, { ...config }).then((response: AxiosResponse) => response.data),
     post: <T>(url: string, body: object) => axiosInstance.post<T>(url, body).then(responseBody),
     put: <T>(url: string, body: object) => axiosInstance.put<T>(url, body).then(responseBody),
     del: <T>(url: string) => axiosInstance.delete<T>(url).then(responseBody)
 }
 
 const Activities = {
-    list: () => requests.get<Activity[]>('/activities'),
+    list: (config: AxiosRequestConfig) => requests.get<Activity[]>('/activities', config),
     details: (id: string) => requests.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => requests.post<void>(`/activities`, activity),
     update: (activity: Activity) => requests.put<Activity>(`/activities/${activity.id}`, activity),
     delete: (id: string) => requests.del<void>(`/activities/${id}`)
 }
 
+const Account = {
+    current: (config: AxiosRequestConfig) => requests.get<User>('/account', config),
+    login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+    register: (user: UserFormValues) => requests.post<User>('/account/register', user)
+}
+
 const agent = {
-    Activities
+    Activities,
+    Account
 }
 export default agent;

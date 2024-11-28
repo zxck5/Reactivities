@@ -1,13 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { fetchActivities, createActivity, deleteActivity, updateActivity, getActivity } from './slice/Api/ActivitySliceAsyncThunk';
 import { activityReducer, setGroupedActivities, setLoading, setSelectedActivity, sortActivitiesBy } from './slice/ActivitySlice';
-import { ActivityErrorReducer, setError } from "./slice/ActivityErrorSlice";
+import { setUser, accountReducer, logout } from "./slice/AccountSlice";
+import { commonReducer, setAppLoaded, setServerError } from "./slice/CommonSlice";
+import { getCurrentUserAsyncThunk, loginUserAsyncThunk, registerUserAsyncThunk } from "./slice/Api/AccountSliceAsyncThunk";
+import { closeModal, modalReducer, openModal } from "./slice/ModalSlice";
 
 
 const store = configureStore({
     reducer: {
+        common: commonReducer,
         activity: activityReducer,
-        error: ActivityErrorReducer
+        account: accountReducer,
+        modal: modalReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -29,8 +34,23 @@ const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export type AppState = ReturnType<typeof store.getState>;
 
+//common
 export {
     store,
+    setServerError,
+    setAppLoaded
+}
+// account
+export {
+    setUser,
+    logout,
+    getCurrentUserAsyncThunk,
+    registerUserAsyncThunk,
+    loginUserAsyncThunk
+}
+
+// activities
+export {
     fetchActivities,
     createActivity,
     deleteActivity,
@@ -40,5 +60,10 @@ export {
     sortActivitiesBy,
     setGroupedActivities,
     setSelectedActivity,
-    setError
+}
+
+// modal
+export {
+    openModal,
+    closeModal
 }

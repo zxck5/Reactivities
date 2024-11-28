@@ -2,10 +2,12 @@ import { Button, Header, Segment } from "semantic-ui-react";
 import { useState } from "react";
 import ValidationError from "./ValidationError";
 import { axiosInstance } from "../../app/api/agent";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function TestErrors() {
     const [errors, setErrors] = useState(null);
+    const navigate = useNavigate();
 
 
     const handleNotFound = () => {
@@ -17,7 +19,9 @@ export default function TestErrors() {
     };
 
     const handleServerError = () => {
-        axiosInstance.get('/buggy/server-error').catch(err => console.log(err.response));
+        axiosInstance.get('/buggy/server-error').catch(err => {
+            // console.log(err.response.data)
+        });
     };
 
     const handleUnauthorised = () => {
@@ -44,12 +48,13 @@ export default function TestErrors() {
                     <Button onClick={handleNotFound} content='Not Found' basic primary />
                     <Button onClick={handleBadRequest} content='Bad Request' basic primary />
                     <Button onClick={handleValidationError} content='Validation Error' basic primary />
-                    <Button onClick={handleServerError} content='Server Error' basic primary />
+                    <Button as={Link} to={'/server-error'} onClick={handleServerError} content='Server Error' basic primary />
                     <Button onClick={handleUnauthorised} content='Unauthorised' basic primary />
                     <Button onClick={handleBadGuid} content='Bad Guid' basic primary />
                 </Button.Group>
             </Segment>
             {errors && <ValidationError errors={errors} />}
+
         </>
     )
 }

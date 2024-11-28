@@ -1,22 +1,34 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Activity } from "../../../app/models/activity";
 import agent from "../../../app/api/agent";
+import { store } from "../..";
 
 const fetchActivities = createAsyncThunk<Activity[]>('activity/fetchActivities',
     async () => {
+        const { token } = store.getState().common;
+        // const token = localStorage.getItem('jwt') || null;
         console.log("FETCH ACTIVITIES ASYNC THUNK");
-        return await agent.Activities.list();
+        const response = await agent.Activities.list({
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return await response;
     }
 );
 
 const getActivity = createAsyncThunk<Activity, string>('activity/fetchActivity',
     async (id) => {
+        // const token = localStorage.getItem('jwt');
+        // axiosInstance.defaults.headers.Authorization = `Bearer ${token}`
         return await agent.Activities.details(id);
     }
 )
 
 const createActivity = createAsyncThunk<Activity, Activity>('activity/createActivity',
     async (activity) => {
+        // const token = localStorage.getItem('jwt');
+        // axiosInstance.defaults.headers.Authorization = `Bearer ${token}`
         await agent.Activities.create({ ...activity, date: new Date(activity.date) });
         return activity;
     }
